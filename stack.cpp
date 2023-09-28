@@ -5,17 +5,18 @@ int stackCtor (Stack_t *stk)
     stk -> size = 0; 
     stk -> capacity = 1;
 
-#if (ASSERT_CANARY != 0)                                                
-    stk -> l_canary = MYDEADBABY;                                                                                                                   \
-    stk -> l_canary_data = (Canary_t*) calloc (1, sizeof(Canary_t)*2 + sizeof(Elem_t) + ((stk -> capacity)*sizeof(Elem_t)) % sizeof(Canary_t));     \
-    stk -> data = (Elem_t*) ((stk -> l_canary_data) + 1);                                                                                           \
-    ptr_r_canary_data (stk);                                                                                                                        \
-    *(stk -> l_canary_data) = MYDEADBEEF;                                                                                                           \
-    *(stk -> r_canary_data) = MYDEADBEEF;                                                                                                           \
-    stk -> r_canary = MYDEADBABY;                                       
-#else
+ON_CANARY_IF(                                                
+    stk -> l_canary = 0xDEADBABE;                                                                                                                   
+    stk -> l_canary_data = (Canary_t*) calloc (1, sizeof(Canary_t)*2 + sizeof(Elem_t) + ((stk -> capacity)*sizeof(Elem_t)) % sizeof(Canary_t));     
+    stk -> data = (Elem_t*) ((stk -> l_canary_data) + 1);                                                                                           
+    ptr_r_canary_data (stk);                                                                                                                        
+    *(stk -> l_canary_data) = 0xDEADBEEF;                                                                                                           
+    *(stk -> r_canary_data) = 0xDEADBEEF;                                                                                                           
+    stk -> r_canary = 0xDEADBABE;                                       
+)
+ON_CANARY_ELSE( 
     stk -> data = (Elem_t*) calloc (1, sizeof(Elem_t));     
-#endif
+)
     return 1;
 }
 
@@ -33,10 +34,9 @@ int push (Stack_t *stk, Elem_t value)
 
     ASSERT_STACK(stk, "push")
 
-#if (DEBUG_PRINTING != 0)
+ON_PRINTING(
     printing_stack (stk, "push");
-#endif
-
+)
     return 1;
 }
 
@@ -56,46 +56,47 @@ int pop (Stack_t *stk, Elem_t* ret_value)
 
     ASSERT_STACK(stk, "pop")
     
-#if (DEBUG_PRINTING != 0)
+ON_PRINTING(
     printing_stack (stk, "pop");
-#endif
-
+)
     return 1;
 }
 
 Elem_t* expansion (Stack_t *stk)
 {
-#if (ASSERT_CANARY != 0)
-    (stk -> capacity) = (stk -> capacity) * MULTIPLIER;                                                                                                                                     \
-    stk -> l_canary_data = (Canary_t*) realloc ((stk -> l_canary_data), sizeof(Canary_t)*2 + sizeof(Elem_t)*(stk -> capacity) + ((stk -> capacity)*sizeof(Elem_t)) % sizeof(Canary_t));     \
-    void* new_place = nullptr;                                                                                                                                                              \
-    new_place = (void*)((stk -> l_canary_data) + 1);                                                                                                                                        \
-    mem_poison (new_place + sizeof(Elem_t)*((stk -> size)+1), (sizeof(Elem_t))*((stk -> capacity)-(stk -> size)-1));                                                                        \
-    ptr_r_canary_data (stk);                                                                                                                                                                \
-    *(stk -> r_canary_data) = MYDEADBEEF;                                                                                                                                                   \
+ON_CANARY_IF( 
+    (stk -> capacity) = (stk -> capacity) * MULTIPLIER;                                                                                                                                     
+    stk -> l_canary_data = (Canary_t*) realloc ((stk -> l_canary_data), sizeof(Canary_t)*2 + sizeof(Elem_t)*(stk -> capacity) + ((stk -> capacity)*sizeof(Elem_t)) % sizeof(Canary_t));     
+    void* new_place = nullptr;                                                                                                                                                              
+    new_place = (void*)((stk -> l_canary_data) + 1);                                                                                                                                        
+    mem_poison (new_place + sizeof(Elem_t)*((stk -> size)+1), (sizeof(Elem_t))*((stk -> capacity)-(stk -> size)-1));                                                                        
+    ptr_r_canary_data (stk);                                                                                                                                                                
+    *(stk -> r_canary_data) = 0xDEADBEEF;                                                                                                                                                   
     return (Elem_t*) new_place;
-#else
-    (stk -> capacity) = (stk -> capacity) * MULTIPLIER;                                                                                      \
-    Elem_t* new_place = (Elem_t*) realloc ((stk -> data), sizeof(Elem_t)*(stk -> capacity));                                                 \
-    mem_poison (new_place + sizeof(Elem_t)*((stk -> size)+1), (sizeof(Elem_t))*((stk -> capacity)-(stk -> size)-1));                         \
+)
+ON_CANARY_ELSE( 
+    (stk -> capacity) = (stk -> capacity) * MULTIPLIER;                                                                                      
+    Elem_t* new_place = (Elem_t*) realloc ((stk -> data), sizeof(Elem_t)*(stk -> capacity));                                                 
+    mem_poison (new_place + sizeof(Elem_t)*((stk -> size)+1), (sizeof(Elem_t))*((stk -> capacity)-(stk -> size)-1));                        
     return new_place;
-#endif
+)
 }
 
 Elem_t* comprassion (Stack_t *stk)
 {
-#if (ASSERT_CANARY != 0)
+ON_CANARY_IF( 
     (stk -> capacity) = (stk -> capacity) / MULTIPLIER;
     stk -> l_canary_data = (Canary_t*) realloc ((stk -> l_canary_data), sizeof(Canary_t)*2 + sizeof(Elem_t)*(stk -> capacity) + ((stk -> capacity)*sizeof(Elem_t)) % sizeof(Canary_t));
     void* new_place = nullptr;
     new_place = (void*)((stk -> l_canary_data) + 1);
     ptr_r_canary_data (stk);
-    *(stk -> r_canary_data) = MYDEADBEEF;
+    *(stk -> r_canary_data) = 0xDEADBEEF;
     return (Elem_t*) new_place;
-#else
-    (stk -> capacity) = (stk -> capacity) / MULTIPLIER;                             \
+)
+ON_CANARY_ELSE( 
+    (stk -> capacity) = (stk -> capacity) / MULTIPLIER;                             
     return (Elem_t*) realloc ((stk -> data), sizeof(Elem_t)*(stk -> capacity));
-#endif
+)
 }
 
 int mem_poison (void* memptr, size_t num)
@@ -106,12 +107,12 @@ int mem_poison (void* memptr, size_t num)
 
 int StackDtor (Stack_t *stk)
 {
-#if (ASSERT_CANARY != 0)
+ON_CANARY_IF( 
     free(stk -> l_canary_data);        
-#else
+)
+ON_CANARY_ELSE( 
     free(stk -> data);
-#endif
-
+)
     return 1;
 }
 
@@ -124,12 +125,12 @@ int checkStack (Stack_t *stk, char* func)
     if ((stk -> size) > (stk -> capacity))               error_code += 4;
     if ((stk -> size) < 0)                               error_code += 8;
     if ((stk -> capacity) <= 0)                          error_code += 16;
-#if (ASSERT_CANARY != 0)
-    if ((stk -> l_canary) != MYDEADBABY)                 error_code += 32;    \
-    if ((stk -> r_canary) != MYDEADBABY)                 error_code += 64;    \
-    if (*(stk -> l_canary_data) != MYDEADBEEF)           error_code += 128;    \
-    if (*(stk -> r_canary_data) != MYDEADBEEF)           error_code += 256;   
-#endif
+ON_CANARY(
+    if ((stk -> l_canary) != 0xDEADBABE)                 error_code += 32;    
+    if ((stk -> r_canary) != 0xDEADBABE)                 error_code += 64;    
+    if (*(stk -> l_canary_data) != 0xDEADBEEF)           error_code += 128;    
+    if (*(stk -> r_canary_data) != 0xDEADBEEF)           error_code += 256;   
+)
     if ((!strcmp(func, "pop"))&&((stk -> size) <= 0))    error_code += 512;
 
     return error_code;
@@ -213,11 +214,11 @@ int degree(int a, int b)
     }
     return x;
 }
-#if (ASSERT_CANARY != 0)
+ON_CANARY(
 Canary_t* ptr_r_canary_data (Stack* stk)                                                                                                    \
 {                                                                                                                                           \
     Canary_t* ptr = (Canary_t*)((char*)((stk -> data) + (stk -> capacity))+((stk -> capacity)*sizeof(Elem_t)) % sizeof(Canary_t));          \
     stk -> r_canary_data = ptr;                                                                                                             \
     return ptr;                                                                                                                             \
 }   
-#endif
+)

@@ -15,25 +15,45 @@
 #else   
 #define ASSERT_STACK(stk, func)     ;         \     
 #define STACK_DUMP(stk, error_code) ;       
-#endif  
+#endif
+
+#if (ASSERT_CANARY != 0)
+#define ON_CANARY(...)  __VA_ARGS__
+#else
+#define ON_CANARY(...)  
+#endif
+
+#if (ASSERT_CANARY != 0)
+#define ON_CANARY_IF(...)  __VA_ARGS__
+#define ON_CANARY_ELSE(...)  
+#else
+#define ON_CANARY_IF(...)
+#define ON_CANARY_ELSE(...)  __VA_ARGS__
+#endif
+
+#if (DEBUG_PRINTING != 0)
+#define ON_PRINTING(...) __VA_ARGS__
+#else
+#define ON_PRINTING(...) 
+#endif
 
 typedef int Elem_t;
-#if (ASSERT_CANARY != 0)
-    typedef unsigned long long Canary_t;  
-#endif
+ON_CANARY( 
+typedef unsigned long long Canary_t; 
+)
 
 typedef struct Stack {
-#if (ASSERT_CANARY != 0)
+ON_CANARY(
     Canary_t  l_canary;
-#endif
+    )
     Elem_t    *data;
     int       size;
     int       capacity; 
-#if (ASSERT_CANARY != 0)
+ON_CANARY (
     Canary_t  *l_canary_data;
     Canary_t  *r_canary_data;
     Canary_t  r_canary;
-#endif
+    )
 } Stack_t;
 
 #include <stdio.h>
@@ -49,8 +69,5 @@ const Elem_t POISON_ELEMENT = INT_MAX;
 const int    N_ERRORS = 10;
 const int    MULTIPLIER = 2;
 const int    MIN_LEN = 5;
-
-#define MYDEADBABY 3735927486 
-#define MYDEADBEEF 3735928559
 
 #endif 

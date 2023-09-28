@@ -16,8 +16,8 @@ int       degree            (int a, int b);
 int       printing_stack    (Stack* stk, char* name);
 #endif
 
-#if (ASSERT_CANARY != 0)
+ON_CANARY(
 Canary_t* ptr_r_canary_data (Stack* stk);
-#endif
+)
 
 #endif

@@ -32,9 +32,9 @@ int main(void)
     pop  (&myStack, &x);
     pop  (&myStack, &x);
 
-#if (DEBUG_PRINTING != 0)
+ON_PRINTING(
     printing_stack (&myStack, "main");
-#endif
+)
 
     StackDtor (&myStack);
     return 0;
