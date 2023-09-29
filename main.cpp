@@ -7,7 +7,6 @@ int main(void)
     stackCtor (&myStack);
 
     int x = 0;
-
     push (&myStack, 40);
     push (&myStack, 30);
     push (&myStack, 1);
@@ -21,10 +20,6 @@ int main(void)
     push (&myStack, -11);
     push (&myStack, 4);
 
-    pop  (&myStack, &x);
-    pop  (&myStack, &x);
-    pop  (&myStack, &x);
-    pop  (&myStack, &x);
     pop  (&myStack, &x);
     pop  (&myStack, &x);
     pop  (&myStack, &x);

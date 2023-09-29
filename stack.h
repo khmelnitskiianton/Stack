@@ -11,11 +11,15 @@ int       checkStack        (Stack_t *stk, char* func);
 int       output_error      (Stack_t *stk, const char* file, const size_t line, const char* pretty_function, int error_code);
 int       mem_poison        (void* memptr, size_t num);
 int       degree            (int a, int b);
+size_t    size_data         (Stack* stk);
 
-#if (DEBUG_PRINTING != 0)
+ON_HASH(
+Hash_t    hash_func    (const char * str, size_t size);
+Hash_t    MYHashFAQ6        (const char * str, size_t size);
+)
+ON_PRINTING(
 int       printing_stack    (Stack* stk, char* name);
-#endif
-
+)
 ON_CANARY(
 Canary_t* ptr_r_canary_data (Stack* stk);
 )
