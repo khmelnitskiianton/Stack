@@ -1,10 +1,16 @@
 #ifndef HEAD_H
 #define HEAD_H
 
+#include <stdio.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <limits.h> 
+#include <string.h>
+
 #define ASSERT_STACK   1
 #define ASSERT_CANARY  1
 #define ASSERT_HASH    1
-#define DEBUG_PRINTING 1
+#define DEBUG_PRINTING 0
 
 #if (ASSERT_STACK != 0)
 #define ASSERT_STACK(stk, func)                             \                                                                        
@@ -55,7 +61,7 @@ typedef unsigned int Hash_t;
 typedef struct Stack {
 ON_CANARY(
     Canary_t  l_canary;
-    )
+)
     Elem_t    *data;
     int       size;
     int       capacity; 
@@ -64,7 +70,7 @@ ON_HASH(
     Hash_t    hash_data;
     Hash_t    hash_struct;
 )
-
+    FILE*     file_write;
 ON_CANARY (
     Canary_t  *l_canary_data;
     Canary_t  *r_canary_data;
@@ -72,18 +78,14 @@ ON_CANARY (
     )
 } Stack_t;
 
-#include <stdio.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <limits.h> 
-#include <string.h>
-
-#include "stack.h"
-
 const Elem_t NULL_ELEMENT = NULL;
 const Elem_t POISON_ELEMENT = INT_MAX;
 const int    N_ERRORS = 12;
 const int    MULTIPLIER = 2;
 const int    MIN_LEN = 5;
+
+#include "stack.h"
+
+#define FILE_WRITE "output.txt"
 
 #endif 

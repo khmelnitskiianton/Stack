@@ -59,7 +59,7 @@ ON_HASH(
     ASSERT_STACK(stk, "push")
 
 ON_PRINTING(
-    printing_stack (stk, "push");
+    printing_stack (stk, __FILE__, __LINE__, __PRETTY_FUNCTION__);
 )
     return 1;
 }
@@ -96,7 +96,7 @@ ON_HASH(
     ASSERT_STACK(stk, "pop")
     
 ON_PRINTING(
-    printing_stack (stk, "pop");
+    printing_stack (stk, __FILE__, __LINE__, __PRETTY_FUNCTION__);
 )
     return 1;
 }
@@ -278,31 +278,31 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
         "HASH BROKE. ANAL PENETRATION IN DATA",
         "POP() BUT DATA EMPTY"
     };
-    printf("\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n");
     int z = error_code;
     int bin_error = 0;
     size_t element = 0;
     int fatal_error = 0;
-    printf("\nERROR:\n");
+    fprintf(stk -> file_write, "\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n");
+    fprintf(stk -> file_write, "\nERROR:\n");
     while (z > 0)
     {
         if (z % 2)
         {
             bin_error += degree(10, element);
-            printf("1: %s\n", mass_of_errors[element]);
+            fprintf(stk -> file_write, "1: %s\n", mass_of_errors[element]);
             if(element != 3) fatal_error = 1;
         }
         else
         {
-            printf("0: OK\n");
+            fprintf(stk -> file_write, "0: OK\n");
         }
         z = z / 2;
         element++;
     }
-    printf("ERROR CODE: %d\n\n", bin_error);
+    fprintf(stk -> file_write,"ERROR CODE: %d\n\n", bin_error);
     if (!fatal_error)
     {
-    printf ("Stack[%p] called from %s (string: %d) in function %s\n"
+    fprintf (stk -> file_write,"Stack[%p] called from %s (string: %d) in function %s\n"
     //      "\t\t%s             \n"
             "{                  \n"
             "\tsize        = %d \n"
@@ -316,27 +316,41 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
 
     for (size_t i = 0; (i < (stk -> capacity)); i++)
     {
-        if (i == stk -> size)                               printf("\t >[%d] = %d<\n", i, *((stk -> data) + i));
-        else if (*((stk -> data) + i) != POISON_ELEMENT)    printf("\t #[%d] = %d\n", i, *((stk -> data) + i));
-        else                                                printf("\t @[%d] = %d(POISON)\n", i, *((stk -> data) + i));
+        if (i == stk -> size)                               fprintf(stk -> file_write,"\t >[%d] = %d<\n", i, *((stk -> data) + i));
+        else if (*((stk -> data) + i) != POISON_ELEMENT)    fprintf(stk -> file_write,"\t #[%d] = %d\n", i, *((stk -> data) + i));
+        else                                                fprintf(stk -> file_write,"\t @[%d] = %d(POISON)\n", i, *((stk -> data) + i));
     }
     
-    printf ("\t} \n"
+    fprintf (stk -> file_write,"\t} \n"
             "}   \n");
     }
     abort();
     return 1;
 }
 
-int printing_stack (Stack* stk, char* name)
+int printing_stack (Stack* stk, const char* file, const size_t line, const char* pretty_function)
 {
-    printf("Action: %s\n", name);
-    for (size_t i = 0; i < (stk -> capacity); i++)
+    fprintf (stk -> file_write,"\nStack[%p] called from %s (string: %d) in function %s\n"
+    //      "\t\t%s             \n"
+            "{                  \n"
+            "\tsize        = %d \n"
+            "\tcapacity    = %d \n"
+        ON_HASH(
+            "\thash_data   = %d \n"
+            "\thash_struct = %d \n"
+        )
+            "\tdata[%p]         \n"
+            "\t{                \n", stk, file, line, pretty_function, stk -> size, stk -> capacity, ON_HASH(stk -> hash_data, stk -> hash_struct,) stk -> data);
+
+    for (size_t i = 0; (i < (stk -> capacity)); i++)
     {
-        printf("stack[%p] = %d\n", stk -> data + i, *((stk -> data) + i));
+        if (i == stk -> size)                               fprintf(stk -> file_write,"\t >[%d] = %d<\n", i, *((stk -> data) + i));
+        else if (*((stk -> data) + i) != POISON_ELEMENT)    fprintf(stk -> file_write,"\t #[%d] = %d\n", i, *((stk -> data) + i));
+        else                                                fprintf(stk -> file_write,"\t @[%d] = %d(POISON)\n", i, *((stk -> data) + i));
     }
-    printf("Size: %d \t Capacity: %d" ON_HASH("\tHASH_DATA: %d \t HASH_STRUCT: %d\n"), (stk -> size), (stk -> capacity) ON_HASH(, (stk -> hash_data), (stk -> hash_struct)));
-    printf("\n\n");
+    
+    fprintf (stk -> file_write,"\t} \n"
+            "}   \n");
     return 1;
 }
 
@@ -390,4 +404,27 @@ ON_CANARY_IF(
 ON_CANARY_ELSE(
     return sizeof(Elem_t)*(stk -> capacity);
 )
+}
+
+FILE* file_write (void)
+{
+    FILE *file_write = nullptr;
+    if ((file_write = fopen (FILE_WRITE, "w")) == nullptr) 
+    {
+        assert(0);
+    }
+    return file_write;
+}
+
+int file_close (FILE *file_text)
+{
+	if (!file_text)
+	{
+		assert(0);
+	}
+	if (fclose (file_text) != 0)
+	{
+		assert(0);
+	}
+	return 1;
 }
