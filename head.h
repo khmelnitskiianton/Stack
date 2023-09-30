@@ -6,18 +6,19 @@
 #include <stdlib.h>
 #include <limits.h> 
 #include <string.h>
+#include <stddef.h>
 
-#define ASSERT_STACK   1
+#define ASSERT_MYSTACK 1
 #define ASSERT_CANARY  1
 #define ASSERT_HASH    1
-#define DEBUG_PRINTING 0
+#define DEBUG_PRINTING 1
 
-#if (ASSERT_STACK != 0)
-#define ASSERT_STACK(stk, func)                             \                                                                        
+#if (ASSERT_MYSTACK != 0)
+#define ASSERT_STACK(stk, func)                             \
         if (checkStack(stk, func) != 0)                     \
         {                                                   \
             STACK_DUMP (stk, checkStack(stk, func))         \
-        }                                                     
+        }                                                   
 #define STACK_DUMP(stk, error_code) output_error(stk, __FILE__, __LINE__, __PRETTY_FUNCTION__, error_code);
 #else   
 #define ASSERT_STACK(stk, func)                   
@@ -70,6 +71,7 @@ ON_HASH(
     Hash_t    hash_data;
     Hash_t    hash_struct;
 )
+    int       ret_value;
     FILE*     file_write;
 ON_CANARY (
     Canary_t  *l_canary_data;
@@ -78,11 +80,10 @@ ON_CANARY (
     )
 } Stack_t;
 
-const Elem_t NULL_ELEMENT = NULL;
 const Elem_t POISON_ELEMENT = INT_MAX;
-const int    N_ERRORS = 12;
+const int    N_ERRORS = 13;
 const int    MULTIPLIER = 2;
-const int    MIN_LEN = 5;
+const int    MIN_LEN = 10;
 
 #include "stack.h"
 
