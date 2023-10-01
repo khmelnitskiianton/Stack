@@ -59,7 +59,11 @@ ON_PRINTING(
 
 int pop (Stack_t *stk, Elem_t* ret_value)
 {
-    if (ret_value == NULL) 
+    if (!stk) 
+    {
+        ASSERT_STACK(stk, __PRETTY_FUNCTION__)
+    }
+    else if (ret_value == NULL) 
     {
         stk -> ret_value = 0;
         ASSERT_STACK(stk, __PRETTY_FUNCTION__)
@@ -69,6 +73,7 @@ int pop (Stack_t *stk, Elem_t* ret_value)
         stk -> ret_value = 1;
         ASSERT_STACK(stk, __PRETTY_FUNCTION__)
     }
+
     Elem_t save_value = POISON_ELEMENT;
     (stk -> size)--;
     save_value = *((stk -> data) + (stk -> size));  
@@ -180,29 +185,34 @@ int checkStack (Stack_t *stk, const char* func)
         error_code += 1<<0;
         return error_code;
     }
-    if (!(stk -> data))
+    if (!(stk -> file_write))
     {
         error_code += 1<<1;
         return error_code;
     }
-    if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&(!(stk -> ret_value)))
+    if (!(stk -> data))
     {
         error_code += 1<<2;
         return error_code;
     }
+    if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&(!(stk -> ret_value)))
+    {
+        error_code += 1<<3;
+        return error_code;
+    }
 
-    if ((stk -> size) > (stk -> capacity))  error_code += 1<<3;
-    if ((stk -> size) < 0)                  error_code += 1<<4;
-    if ((stk -> capacity) <= 0)             error_code += 1<<5;
+    if ((stk -> size) > (stk -> capacity))  error_code += 1<<4;
+    if ((stk -> size) < 0)                  error_code += 1<<5;
+    if ((stk -> capacity) <= 0)             error_code += 1<<6;
 
 
-    if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&((stk -> size) == 0)) error_code += 1<<6;
+    if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&((stk -> size) == 0)) error_code += 1<<7;
 
 ON_CANARY(
-    if ((stk -> l_canary)       != 0xDEADBABE) error_code += 1<<7; 
-    if ((stk -> r_canary)       != 0xDEADBABE) error_code += 1<<8;   
-    if (*(stk -> l_canary_data) != 0xDEADBEEF) error_code += 1<<9;  
-    if (*(stk -> r_canary_data) != 0xDEADBEEF) error_code += 1<<10;
+    if ((stk -> l_canary)       != 0xDEADBABE) error_code += 1<<8; 
+    if ((stk -> r_canary)       != 0xDEADBABE) error_code += 1<<9;   
+    if (*(stk -> l_canary_data) != 0xDEADBEEF) error_code += 1<<10;  
+    if (*(stk -> r_canary_data) != 0xDEADBEEF) error_code += 1<<11;
 )
 ON_CANARY_IF(
 ON_HASH(
@@ -210,11 +220,11 @@ ON_HASH(
     stk -> hash_struct = 0;
     if ((save_hash) != hash_func((const char*)(stk), sizeof(Stack_t))) 
     {
-        error_code += 1<<11;
+        error_code += 1<<12;
         return error_code;
     }
     else stk -> hash_struct = hash_func((const char*)(stk), sizeof(Stack_t));
-    if ((stk -> hash_data) != hash_func((const char*)(stk -> l_canary_data), size_data(stk))) error_code += 1<<12;
+    if ((stk -> hash_data) != hash_func((const char*)(stk -> l_canary_data), size_data(stk))) error_code += 1<<13;
 ) 
 )
 ON_CANARY_ELSE(
@@ -223,11 +233,11 @@ ON_HASH(
     stk -> hash_struct = 0;
     if ((save_hash) != hash_func((const char*)(stk), sizeof(Stack_t))) 
     {
-        error_code += 1<<11;
+        error_code += 1<<12;
         return error_code;
     }
     else stk -> hash_struct = hash_func((const char*)(stk), sizeof(Stack_t));
-    if ((stk -> hash_data) != hash_func((const char*)(stk -> data), size_data(stk))) error_code += 1<<12;
+    if ((stk -> hash_data) != hash_func((const char*)(stk -> data), size_data(stk))) error_code += 1<<13;
 )
 )
     return error_code;
@@ -236,7 +246,8 @@ ON_HASH(
 int output_error (Stack_t *stk, const char* file, const size_t line, const char* pretty_function, int error_code)
 {   
     const char* mass_of_errors[N_ERRORS] = {
-        "ADDRESS OF STRUCTURE == NULL",
+        "ADDRESS OF STRUCTURE == NULL. OUTPUT IN TERMINAL",
+        "ADDRESS OF FILE WRITE == NULL. OUTPUT IN TERMINAL",
         "ADDRESS OF ARRAY IN STRUCTURE == NULL",
         "ADDRESS OF RETURNING ARGUMENT IN POP == NULL",
         "SIZE > CAPACITY",
@@ -250,23 +261,39 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
         "HASH BROKE. ANAL PENETRATION IN STRUCT",
         "HASH BROKE. ANAL PENETRATION IN DATA"
     };
-    fprintf(stk -> file_write, "\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n");
-    fprintf(stk -> file_write, "\nERROR:\n");
     int z = error_code;
     int bin_error = 0;
     size_t element = 0;
     int fatal_error = 0;
+    if (z == 1)
+    {
+        printf("\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
+            "Stack[%p] called from %s (string: %d) in function %s\n"
+            "1: [%s]\n", stk, file, line, pretty_function,mass_of_errors[0]);
+        abort();
+    }
+    if (z == 2)
+    {
+        printf("\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
+            "Stack[%p] called from %s (string: %d) in function %s\n"
+            "0: [OK]\n"
+            "1: [%s]\n", stk, file, line, pretty_function,mass_of_errors[1]);
+        abort();
+    }
+    fprintf(stk -> file_write, "\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n");
+    fprintf(stk -> file_write, "\nERROR:\n");
+
     while (z > 0)
     {
         if (z % 2)
         {
             bin_error += degree(10, element);
-            fprintf(stk -> file_write, "1: %s\n", mass_of_errors[element]);
-            if(element != 12) fatal_error = 1;
+            fprintf(stk -> file_write, "1: [%s]\n", mass_of_errors[element]);
+            if(element != 13) fatal_error = 1;
         }
         else
         {
-            fprintf(stk -> file_write, "0: OK\n");
+            fprintf(stk -> file_write, "0: [OK]\n");
         }
         z = z / 2;
         element++;
@@ -317,7 +344,7 @@ int printing_stack (Stack* stk, const char* file, const size_t line, const char*
 
     for (ssize_t i = 0; (i < (stk -> capacity)); i++)
     {
-        if (i == (stk -> size))                               fprintf(stk -> file_write,"\t >[%d] = %d<\n", i, *((stk -> data) + i));
+        if (i == (stk -> size))                             fprintf(stk -> file_write,"\t >[%d] = %d<\n", i, *((stk -> data) + i));
         else if (*((stk -> data) + i) != POISON_ELEMENT)    fprintf(stk -> file_write,"\t #[%d] = %d\n", i, *((stk -> data) + i));
         else                                                fprintf(stk -> file_write,"\t @[%d] = %d(POISON)\n", i, *((stk -> data) + i));
     }

@@ -81,7 +81,7 @@ ON_CANARY (
 } Stack_t;
 
 const Elem_t POISON_ELEMENT = INT_MAX;
-const int    N_ERRORS = 13;
+const int    N_ERRORS = 14;
 const int    MULTIPLIER = 2;
 const int    MIN_LEN = 10;
 
