@@ -81,11 +81,7 @@ ON_CANARY (
 } Stack_t;
 
 const Elem_t POISON_ELEMENT = INT_MAX;
-<<<<<<< Updated upstream
-const int    N_ERRORS = 15;
-=======
 const int    N_ERRORS = 16;
->>>>>>> Stashed changes
 const int    MULTIPLIER = 2;
 const int    MIN_LEN = 10;
 

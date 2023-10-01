@@ -9,8 +9,8 @@ int main(void)
     int x = 0;
     push (&myStack, 40);
     push (&myStack, 1);
-    myStack.r_canary_data = NULL;
     push (&myStack, 9);
+    myStack.r_canary_data = NULL;
     push (&myStack, -11);
     push (&myStack, 4);
     push (&myStack, -11);
