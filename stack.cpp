@@ -265,21 +265,7 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
     int bin_error = 0;
     size_t element = 0;
     int fatal_error = 0;
-    if (z == 1)
-    {
-        printf("\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
-            "Stack[%p] called from %s (string: %d) in function %s\n"
-            "1: [%s]\n", stk, file, line, pretty_function,mass_of_errors[0]);
-        abort();
-    }
-    if (z == 2)
-    {
-        printf("\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
-            "Stack[%p] called from %s (string: %d) in function %s\n"
-            "0: [OK]\n"
-            "1: [%s]\n", stk, file, line, pretty_function,mass_of_errors[1]);
-        abort();
-    }
+
     fprintf(stk -> file_write, "\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n");
     fprintf(stk -> file_write, "\nERROR:\n");
 
