@@ -4,8 +4,13 @@ Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*
 	size        = 1 
 	capacity    = 1 
 	hash_data   = -1374744106 
+<<<<<<< Updated upstream
 	hash_struct = 1997213114 
 	data[00B51598]         
+=======
+	hash_struct = -1948805851 
+	data[00BD1598]         
+>>>>>>> Stashed changes
 	{                
 	 #[0] = 40
 	} 
@@ -15,9 +20,15 @@ Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*
 {                  
 	size        = 2 
 	capacity    = 2 
+<<<<<<< Updated upstream
 	hash_data   = 626917417 
 	hash_struct = -471209110 
 	data[00B51598]         
+=======
+	hash_data   = -2008334934 
+	hash_struct = 573487477 
+	data[00BD1598]         
+>>>>>>> Stashed changes
 	{                
 	 #[0] = 40
 	 #[1] = 1
@@ -28,9 +39,15 @@ Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*
 {                  
 	size        = 3 
 	capacity    = 4 
+<<<<<<< Updated upstream
 	hash_data   = -537692787 
 	hash_struct = 35372870 
 	data[00B51598]         
+=======
+	hash_data   = -2023531106 
+	hash_struct = -1050895705 
+	data[00BD1598]         
+>>>>>>> Stashed changes
 	{                
 	 #[0] = 40
 	 #[1] = 1
@@ -45,6 +62,7 @@ ERROR:
 0: [OK]
 0: [OK]
 0: [OK]
+<<<<<<< Updated upstream
 0: [OK]
 0: [OK]
 0: [OK]
@@ -58,4 +76,8 @@ ERROR:
 0: [OK]
 1: [HASH BROKE. ANAL PENETRATION IN DATA]
 ERROR CODE: [16512]
+=======
+1: [ADDRESS OF RIGHT CANARY IN DATA == NULL]
+ERROR CODE: 1000
+>>>>>>> Stashed changes
 

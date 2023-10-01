@@ -189,6 +189,7 @@ int checkStack (Stack_t *stk, const char* func)
 ON_CANARY(
     if (!(stk -> l_canary_data)) 
     {
+<<<<<<< Updated upstream
         error_code |= 1<<2;  
         return error_code;
     }
@@ -198,6 +199,24 @@ ON_CANARY(
         return error_code;
     }
 )   
+=======
+        error_code |= 1<<1;
+        return error_code;
+    }
+
+ON_CANARY(
+    if (!(stk -> l_canary_data)) 
+    {
+        error_code |= 1<<2;  
+        return error_code;
+    }
+    if (!(stk -> r_canary_data)) 
+    {
+        error_code |= 1<<3;  
+        return error_code;
+    }
+)
+>>>>>>> Stashed changes
 
     if (!(stk -> data))
     {
@@ -214,13 +233,20 @@ ON_CANARY(
     if ((stk -> size) < 0)                  error_code |= 1<<7;
     if ((stk -> capacity) <= 0)             error_code |= 1<<8;
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&((stk -> size) == 0)) error_code |= 1<<9;
 
 ON_CANARY(
     if ((stk -> l_canary)       != 0xDEADBABE) error_code |= 1<<10; 
+<<<<<<< Updated upstream
     if ((stk -> r_canary)       != 0xDEADBABE) error_code |= 1<<11;
  
+=======
+    if ((stk -> r_canary)       != 0xDEADBABE) error_code |= 1<<11;   
+>>>>>>> Stashed changes
     if (*(stk -> l_canary_data) != 0xDEADBEEF) error_code |= 1<<12;  
     if (*(stk -> r_canary_data) != 0xDEADBEEF) error_code |= 1<<13;
 )
@@ -257,6 +283,10 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
 {   
     const char* mass_of_errors[N_ERRORS] = {
         "ADDRESS OF STRUCTURE == NULL. OUTPUT IN TERMINAL",
+<<<<<<< Updated upstream
+=======
+        "ADDRESS OF FILE WRITE == NULL. OUTPUT IN TERMINAL",
+>>>>>>> Stashed changes
         "ADDRESS OF LEFT CANARY IN DATA == NULL",
         "ADDRESS OF RIGHT CANARY IN DATA == NULL",
         "ADDRESS OF ARRAY IN STRUCTURE == NULL",
@@ -276,6 +306,22 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
     unsigned long bin_error = 0;
     size_t element = 0;
     int fatal_error = 0;
+
+    if (z == 1)
+    {
+        printf("\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
+            "Stack[%p] called from %s (string: %d) in function %s\n"
+            "1: [%s]\n", stk, file, line, pretty_function,mass_of_errors[0]);
+        abort();
+    }
+    if (z == 2)
+    {
+        printf("\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
+            "Stack[%p] called from %s (string: %d) in function %s\n"
+            "0: [OK]\n"
+            "1: [%s]\n", stk, file, line, pretty_function,mass_of_errors[1]);
+        abort();
+    }
 
     fprintf(stk -> file_write, "\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n");
     fprintf(stk -> file_write, "\nERROR:\n");
