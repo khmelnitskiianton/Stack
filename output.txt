@@ -4,8 +4,8 @@ Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*
 	size        = 1 
 	capacity    = 1 
 	hash_data   = -1374744106 
-	hash_struct = -872766264 
-	data[00C31598]         
+	hash_struct = 1997213114 
+	data[00B51598]         
 	{                
 	 #[0] = 40
 	} 
@@ -16,8 +16,8 @@ Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*
 	size        = 2 
 	capacity    = 2 
 	hash_data   = 626917417 
-	hash_struct = -850962408 
-	data[00C31598]         
+	hash_struct = -471209110 
+	data[00B51598]         
 	{                
 	 #[0] = 40
 	 #[1] = 1
@@ -29,8 +29,8 @@ Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*
 	size        = 3 
 	capacity    = 4 
 	hash_data   = -537692787 
-	hash_struct = 2075167305 
-	data[00C31598]         
+	hash_struct = 35372870 
+	data[00B51598]         
 	{                
 	 #[0] = 40
 	 #[1] = 1
@@ -49,13 +49,13 @@ ERROR:
 0: [OK]
 0: [OK]
 0: [OK]
-1: [SIZE < 0]
+1: [CAPACITY <= 0]
 0: [OK]
 0: [OK]
 0: [OK]
 0: [OK]
 0: [OK]
 0: [OK]
-1: [HASH BROKE. ANAL PENETRATION IN STRUCT]
+1: [HASH BROKE. ANAL PENETRATION IN DATA]
 ERROR CODE: [16512]
 
