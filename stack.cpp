@@ -31,6 +31,7 @@ ON_HASH(
 int push (Stack_t *stk, Elem_t value)
 { 
     ASSERT_STACK(stk, __PRETTY_FUNCTION__)
+
     if ((stk -> size) == (stk -> capacity))
     {
         (stk -> data) = expansion (stk);
@@ -50,7 +51,6 @@ ON_HASH(
 )
 )
     ASSERT_STACK(stk, __PRETTY_FUNCTION__)
-
 ON_PRINTING(
     printing_stack (stk, __FILE__, __LINE__, __PRETTY_FUNCTION__);
 )
@@ -182,37 +182,52 @@ int checkStack (Stack_t *stk, const char* func)
     
     if (!stk)                    
     {
-        error_code += 1<<0;
+        error_code |= 1<<0;
         return error_code;
     }
     if (!(stk -> file_write))
     {
-        error_code += 1<<1;
+        error_code |= 1<<1;
         return error_code;
     }
+
+ON_CANARY(
+    if (!(stk -> l_canary_data)) 
+    {
+        error_code |= 1<<2;  
+        return error_code;
+    }
+    if (!(stk -> r_canary_data))
+    { 
+        error_code |= 1<<3;
+        return error_code;
+    }
+)   
+
     if (!(stk -> data))
     {
-        error_code += 1<<2;
+        error_code |= 1<<4;
         return error_code;
     }
     if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&(!(stk -> ret_value)))
     {
-        error_code += 1<<3;
+        error_code |= 1<<5;
         return error_code;
     }
 
-    if ((stk -> size) > (stk -> capacity))  error_code += 1<<4;
-    if ((stk -> size) < 0)                  error_code += 1<<5;
-    if ((stk -> capacity) <= 0)             error_code += 1<<6;
+    if ((stk -> size) > (stk -> capacity))  error_code |= 1<<6;
+    if ((stk -> size) < 0)                  error_code |= 1<<7;
+    if ((stk -> capacity) <= 0)             error_code |= 1<<8;
 
 
-    if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&((stk -> size) == 0)) error_code += 1<<7;
+    if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&((stk -> size) == 0)) error_code |= 1<<9;
 
 ON_CANARY(
-    if ((stk -> l_canary)       != 0xDEADBABE) error_code += 1<<8; 
-    if ((stk -> r_canary)       != 0xDEADBABE) error_code += 1<<9;   
-    if (*(stk -> l_canary_data) != 0xDEADBEEF) error_code += 1<<10;  
-    if (*(stk -> r_canary_data) != 0xDEADBEEF) error_code += 1<<11;
+    if ((stk -> l_canary)       != 0xDEADBABE) error_code |= 1<<10; 
+    if ((stk -> r_canary)       != 0xDEADBABE) error_code |= 1<<11;
+ 
+    if (*(stk -> l_canary_data) != 0xDEADBEEF) error_code |= 1<<12;  
+    if (*(stk -> r_canary_data) != 0xDEADBEEF) error_code |= 1<<13;
 )
 ON_CANARY_IF(
 ON_HASH(
@@ -220,11 +235,11 @@ ON_HASH(
     stk -> hash_struct = 0;
     if ((save_hash) != hash_func((const char*)(stk), sizeof(Stack_t))) 
     {
-        error_code += 1<<12;
+        error_code |= 1<<14;
         return error_code;
     }
     else stk -> hash_struct = hash_func((const char*)(stk), sizeof(Stack_t));
-    if ((stk -> hash_data) != hash_func((const char*)(stk -> l_canary_data), size_data(stk))) error_code += 1<<13;
+    if ((stk -> hash_data) != hash_func((const char*)(stk -> l_canary_data), size_data(stk))) error_code |= 1<<15;
 ) 
 )
 ON_CANARY_ELSE(
@@ -233,11 +248,11 @@ ON_HASH(
     stk -> hash_struct = 0;
     if ((save_hash) != hash_func((const char*)(stk), sizeof(Stack_t))) 
     {
-        error_code += 1<<12;
+        error_code |= 1<<14;
         return error_code;
     }
     else stk -> hash_struct = hash_func((const char*)(stk), sizeof(Stack_t));
-    if ((stk -> hash_data) != hash_func((const char*)(stk -> data), size_data(stk))) error_code += 1<<13;
+    if ((stk -> hash_data) != hash_func((const char*)(stk -> data), size_data(stk))) error_code |= 1<<15;
 )
 )
     return error_code;
@@ -248,6 +263,8 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
     const char* mass_of_errors[N_ERRORS] = {
         "ADDRESS OF STRUCTURE == NULL. OUTPUT IN TERMINAL",
         "ADDRESS OF FILE WRITE == NULL. OUTPUT IN TERMINAL",
+        "ADDRESS OF LEFT CANARY IN DATA == NULL",
+        "ADDRESS OF RIGHT CANARY IN DATA == NULL",
         "ADDRESS OF ARRAY IN STRUCTURE == NULL",
         "ADDRESS OF RETURNING ARGUMENT IN POP == NULL",
         "SIZE > CAPACITY",
@@ -262,9 +279,10 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
         "HASH BROKE. ANAL PENETRATION IN DATA"
     };
     int z = error_code;
-    int bin_error = 0;
+    unsigned long bin_error = 0;
     size_t element = 0;
     int fatal_error = 0;
+
     if (z == 1)
     {
         printf("\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
@@ -280,6 +298,7 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
             "1: [%s]\n", stk, file, line, pretty_function,mass_of_errors[1]);
         abort();
     }
+
     fprintf(stk -> file_write, "\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n");
     fprintf(stk -> file_write, "\nERROR:\n");
 
@@ -287,9 +306,9 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
     {
         if (z % 2)
         {
-            bin_error += degree(10, element);
+            bin_error += 1<<(element);
             fprintf(stk -> file_write, "1: [%s]\n", mass_of_errors[element]);
-            if(element != 13) fatal_error = 1;
+            if(element != 15) fatal_error = 1;
         }
         else
         {
@@ -298,7 +317,7 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
         z = z / 2;
         element++;
     }
-    fprintf(stk -> file_write,"ERROR CODE: %d\n\n", bin_error);
+    fprintf(stk -> file_write,"ERROR CODE: [%lu]\n\n", bin_error);
     
     if (!fatal_error)
     {

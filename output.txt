@@ -4,8 +4,8 @@ Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*
 	size        = 1 
 	capacity    = 1 
 	hash_data   = -1374744106 
-	hash_struct = 2106020252 
-	data[00CF0D08]         
+	hash_struct = -872766264 
+	data[00C31598]         
 	{                
 	 #[0] = 40
 	} 
@@ -15,12 +15,12 @@ Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*
 {                  
 	size        = 2 
 	capacity    = 2 
-	hash_data   = -2008334934 
-	hash_struct = -1469545570 
-	data[00CF0D08]         
+	hash_data   = 626917417 
+	hash_struct = -850962408 
+	data[00C31598]         
 	{                
 	 #[0] = 40
-	 #[1] = 30
+	 #[1] = 1
 	} 
 }   
 
@@ -28,358 +28,34 @@ Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*
 {                  
 	size        = 3 
 	capacity    = 4 
-	hash_data   = -2023531106 
-	hash_struct = 1222404256 
-	data[00CF0D08]         
+	hash_data   = -537692787 
+	hash_struct = 2075167305 
+	data[00C31598]         
 	{                
 	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
+	 #[1] = 1
+	 #[2] = 9
 	 >[3] = 2147483647<
 	} 
 }   
 
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
-{                  
-	size        = 4 
-	capacity    = 4 
-	hash_data   = -1456939149 
-	hash_struct = -1073369464 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	} 
-}   
+<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>
 
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
-{                  
-	size        = 5 
-	capacity    = 8 
-	hash_data   = -480662235 
-	hash_struct = -544855672 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 >[5] = 2147483647<
-	 @[6] = 2147483647(POISON)
-	 @[7] = 2147483647(POISON)
-	} 
-}   
+ERROR:
+0: [OK]
+0: [OK]
+0: [OK]
+0: [OK]
+0: [OK]
+0: [OK]
+0: [OK]
+1: [SIZE < 0]
+0: [OK]
+0: [OK]
+0: [OK]
+0: [OK]
+0: [OK]
+0: [OK]
+1: [HASH BROKE. ANAL PENETRATION IN STRUCT]
+ERROR CODE: [16512]
 
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
-{                  
-	size        = 6 
-	capacity    = 8 
-	hash_data   = -776109367 
-	hash_struct = 440119096 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 >[6] = 2147483647<
-	 @[7] = 2147483647(POISON)
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
-{                  
-	size        = 7 
-	capacity    = 8 
-	hash_data   = -1692854006 
-	hash_struct = 655209430 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 >[7] = 2147483647<
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
-{                  
-	size        = 8 
-	capacity    = 8 
-	hash_data   = -38951580 
-	hash_struct = -349640911 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 #[7] = 4
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
-{                  
-	size        = 9 
-	capacity    = 16 
-	hash_data   = -1549336008 
-	hash_struct = -248430169 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 #[7] = 4
-	 #[8] = -11
-	 >[9] = 2147483647<
-	 @[10] = 2147483647(POISON)
-	 @[11] = 2147483647(POISON)
-	 @[12] = 2147483647(POISON)
-	 @[13] = 2147483647(POISON)
-	 @[14] = 2147483647(POISON)
-	 @[15] = 2147483647(POISON)
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
-{                  
-	size        = 10 
-	capacity    = 16 
-	hash_data   = 512011975 
-	hash_struct = -1995361549 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 #[7] = 4
-	 #[8] = -11
-	 #[9] = 4
-	 >[10] = 2147483647<
-	 @[11] = 2147483647(POISON)
-	 @[12] = 2147483647(POISON)
-	 @[13] = 2147483647(POISON)
-	 @[14] = 2147483647(POISON)
-	 @[15] = 2147483647(POISON)
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
-{                  
-	size        = 11 
-	capacity    = 16 
-	hash_data   = -688953166 
-	hash_struct = 1773368458 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 #[7] = 4
-	 #[8] = -11
-	 #[9] = 4
-	 #[10] = -11
-	 >[11] = 2147483647<
-	 @[12] = 2147483647(POISON)
-	 @[13] = 2147483647(POISON)
-	 @[14] = 2147483647(POISON)
-	 @[15] = 2147483647(POISON)
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
-{                  
-	size        = 12 
-	capacity    = 16 
-	hash_data   = 815265206 
-	hash_struct = -1022373404 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 #[7] = 4
-	 #[8] = -11
-	 #[9] = 4
-	 #[10] = -11
-	 #[11] = 4
-	 >[12] = 2147483647<
-	 @[13] = 2147483647(POISON)
-	 @[14] = 2147483647(POISON)
-	 @[15] = 2147483647(POISON)
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 101) in function int pop(Stack_t*, Elem_t*)
-{                  
-	size        = 11 
-	capacity    = 16 
-	hash_data   = -688953166 
-	hash_struct = 1773368458 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 #[7] = 4
-	 #[8] = -11
-	 #[9] = 4
-	 #[10] = -11
-	 >[11] = 2147483647<
-	 @[12] = 2147483647(POISON)
-	 @[13] = 2147483647(POISON)
-	 @[14] = 2147483647(POISON)
-	 @[15] = 2147483647(POISON)
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 101) in function int pop(Stack_t*, Elem_t*)
-{                  
-	size        = 10 
-	capacity    = 16 
-	hash_data   = 512011975 
-	hash_struct = -1995361549 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 #[7] = 4
-	 #[8] = -11
-	 #[9] = 4
-	 >[10] = 2147483647<
-	 @[11] = 2147483647(POISON)
-	 @[12] = 2147483647(POISON)
-	 @[13] = 2147483647(POISON)
-	 @[14] = 2147483647(POISON)
-	 @[15] = 2147483647(POISON)
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 101) in function int pop(Stack_t*, Elem_t*)
-{                  
-	size        = 9 
-	capacity    = 16 
-	hash_data   = -1549336008 
-	hash_struct = -248430169 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 #[7] = 4
-	 #[8] = -11
-	 >[9] = 2147483647<
-	 @[10] = 2147483647(POISON)
-	 @[11] = 2147483647(POISON)
-	 @[12] = 2147483647(POISON)
-	 @[13] = 2147483647(POISON)
-	 @[14] = 2147483647(POISON)
-	 @[15] = 2147483647(POISON)
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 101) in function int pop(Stack_t*, Elem_t*)
-{                  
-	size        = 8 
-	capacity    = 16 
-	hash_data   = 642036863 
-	hash_struct = 1920562035 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 #[7] = 4
-	 >[8] = 2147483647<
-	 @[9] = 2147483647(POISON)
-	 @[10] = 2147483647(POISON)
-	 @[11] = 2147483647(POISON)
-	 @[12] = 2147483647(POISON)
-	 @[13] = 2147483647(POISON)
-	 @[14] = 2147483647(POISON)
-	 @[15] = 2147483647(POISON)
-	} 
-}   
-
-Stack[0064FEC0] called from stack.cpp (string: 101) in function int pop(Stack_t*, Elem_t*)
-{                  
-	size        = 7 
-	capacity    = 8 
-	hash_data   = -1692854006 
-	hash_struct = 655209430 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 >[7] = 2147483647<
-	} 
-}   
-
-Stack[0064FEC0] called from main.cpp (string: 31) in function int main()
-{                  
-	size        = 7 
-	capacity    = 8 
-	hash_data   = -1692854006 
-	hash_struct = 655209430 
-	data[00CF0D08]         
-	{                
-	 #[0] = 40
-	 #[1] = 30
-	 #[2] = 1
-	 #[3] = 9
-	 #[4] = -11
-	 #[5] = 4
-	 #[6] = -11
-	 >[7] = 2147483647<
-	} 
-}   

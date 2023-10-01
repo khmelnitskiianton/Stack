@@ -8,9 +8,9 @@ int main(void)
 
     int x = 0;
     push (&myStack, 40);
-    push (&myStack, 30);
     push (&myStack, 1);
     push (&myStack, 9);
+    myStack.size = -1;
     push (&myStack, -11);
     push (&myStack, 4);
     push (&myStack, -11);
