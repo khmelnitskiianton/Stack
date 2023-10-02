@@ -310,6 +310,7 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
     fprintf (stk -> file_write,"\t} \n"
             "}   \n");
     }
+    file_close(stk -> file_write);
     abort();
     return 1;
 }
