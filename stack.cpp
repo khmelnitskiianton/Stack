@@ -9,7 +9,12 @@ int stackCtor (Stack_t *stk)
 
 ON_CANARY_IF(                                                
     stk -> l_canary = 0xDEADBABE;                                                                                                                   
-    stk -> l_canary_data = (Canary_t*) calloc (1, size_data(stk));     
+    if ((stk -> l_canary_data = (Canary_t*) calloc (1, size_data(stk))) == nullptr)
+    {
+        fprintf(stdout,            "ERROR IN INITIALIZATION OF CALLOC IN %s", __PRETTY_FUNCTION__);
+        fprintf(stk -> file_write, "ERROR IN INITIALIZATION OF CALLOC IN %s", __PRETTY_FUNCTION__);
+        abort();
+    }     
     stk -> data = (Elem_t*) ((stk -> l_canary_data) + 1);                                                                                           
     ptr_r_canary_data (stk);                                                                                                                        
     *(stk -> l_canary_data) = 0xDEADBEEF;                                                                                                           
@@ -20,11 +25,17 @@ ON_HASH(
 )                                      
 )
 ON_CANARY_ELSE( 
-    stk -> data = (Elem_t*) calloc (1, size_data(stk));     
+    if ((stk -> data = (Elem_t*) calloc (1, size_data(stk))) == nullptr)
+    {   
+        fprintf(stdout,            "ERROR IN INITIALIZATION OF CALLOC");
+        fprintf(stk -> file_write, "ERROR IN INITIALIZATION OF CALLOC");  
+        abort();
+    }
 ON_HASH(
     rewrite_hash(stk, (const char*)(stk -> data));
 )
 )
+    ASSERT_STACK(stk, __PRETTY_FUNCTION__)
     return 1;
 }
 
@@ -106,7 +117,12 @@ Elem_t* expansion (Stack_t *stk)
 {
 ON_CANARY_IF( 
     (stk -> capacity) = (stk -> capacity) * MULTIPLIER;                                                                                                                                     
-    stk -> l_canary_data = (Canary_t*) realloc ((stk -> l_canary_data), size_data(stk));     
+    if ((stk -> l_canary_data = (Canary_t*) realloc ((stk -> l_canary_data), size_data(stk))) == nullptr)
+    {   
+        fprintf(stdout,            "ERROR IN INITIALIZATION OF CALLOC");
+        fprintf(stk -> file_write, "ERROR IN INITIALIZATION OF CALLOC");  
+        abort();
+    }     
     void* new_place = nullptr;                                                                                                                                                              
     new_place = (void*)((stk -> l_canary_data) + 1);                                                                                                                                        
     mem_poison ((char*) new_place + sizeof(Elem_t)*(stk -> size), (stk -> capacity)-(stk -> size));                                                                        
@@ -118,7 +134,13 @@ ON_HASH(
 )
 ON_CANARY_ELSE( 
     (stk -> capacity) = (stk -> capacity) * MULTIPLIER;                                                                                      
-    void* new_place = realloc ((stk -> data), sizeof(Elem_t)*(stk -> capacity));                                                 
+    if ((void* new_place = realloc ((stk -> data), sizeof(Elem_t)*(stk -> capacity))) == nullptr)
+    {   
+        fprintf(stdout,            "ERROR IN RECALLOC IN %s", __PRETTY_FUNCTION__);
+        fprintf(stk -> file_write, "ERROR IN RECALLOC IN %s", __PRETTY_FUNCTION__);  
+        abort();
+    }
+                                                 
     mem_poison (new_place + sizeof(Elem_t)*(stk -> size), (stk -> capacity)-(stk -> size));                        
 ON_HASH(
     rewrite_hash(stk, (const char*)(stk -> data));
@@ -131,7 +153,12 @@ Elem_t* comprassion (Stack_t *stk)
 {
 ON_CANARY_IF( 
     (stk -> capacity) = (stk -> capacity) / MULTIPLIER;
-    stk -> l_canary_data = (Canary_t*) realloc ((stk -> l_canary_data), size_data(stk));
+    if ((stk -> l_canary_data = (Canary_t*) realloc ((stk -> l_canary_data), size_data(stk))) == nullptr)
+    {   
+        fprintf(stdout,            "ERROR IN RECALLOC IN %s", __PRETTY_FUNCTION__);
+        fprintf(stk -> file_write, "ERROR IN RECALLOC IN %s", __PRETTY_FUNCTION__);  
+        abort();
+    }
     void* new_place = nullptr;
     new_place = (void*)((stk -> l_canary_data) + 1);
     ptr_r_canary_data (stk);
@@ -215,13 +242,26 @@ ON_CANARY(
         error_code |= 1<<5;
         return error_code;
     }
-
-    if ((stk -> size) > (stk -> capacity))  error_code |= 1<<6;
-    if ((stk -> size) < 0)                  error_code |= 1<<7;
-    if ((stk -> capacity) <= 0)             error_code |= 1<<8;
-
-    if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&((stk -> size) == 0)) error_code |= 1<<9;
-
+    if ((stk -> capacity) <= 0)             
+    {
+        error_code |= 1<<6;
+        return error_code;
+    }
+        if ((stk -> size) < 0)                  
+    {
+        error_code |= 1<<7;
+        return error_code;
+    }
+    if ((stk -> size) > (stk -> capacity))  
+    {
+        error_code |= 1<<8;
+        return error_code;
+    }
+    if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&((stk -> size) == 0)) 
+    {
+        error_code |= 1<<9;
+        return error_code;
+    }
 ON_CANARY(
     if ((stk -> l_canary)       != 0xDEADBABE) error_code |= 1<<10; 
     if ((stk -> r_canary)       != 0xDEADBABE) error_code |= 1<<11;
@@ -267,9 +307,9 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
         "ADDRESS OF RIGHT CANARY IN DATA == NULL",
         "ADDRESS OF ARRAY IN STRUCTURE == NULL",
         "ADDRESS OF RETURNING ARGUMENT IN POP == NULL",
-        "SIZE > CAPACITY",
-        "SIZE < 0",
         "CAPACITY <= 0",
+        "SIZE < 0",
+        "SIZE > CAPACITY",
         "POP() BUT DATA EMPTY",
         "LEFT CANARY IN STRUCT IS DEAD. ANAL PENETRATION IN STRUCT",
         "RIGHT CANARY IN STRUCT IS DEAD. ANAL PENETRATION IN STRUCT",
@@ -282,18 +322,18 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
     unsigned long bin_error = 0;
     size_t element = 0;
     int fatal_error = 0;
-
+    printf("<<<<<!!!!YOU HAVE ERROR.CHECK OUTPUT.TXT OR TERMINAL!!!!>>>>>>>\n");
     if (z == 1)
     {
         printf("\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
-            "Stack[%p] called from %s (string: %d) in function %s\n"
+            "Stack[%p] called from %s (string: %lld) in function %s\n"
             "1: [%s]\n", stk, file, line, pretty_function,mass_of_errors[0]);
         abort();
     }
     if (z == 2)
     {
         printf("\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
-            "Stack[%p] called from %s (string: %d) in function %s\n"
+            "Stack[%p] called from %s (string: %lld) in function %s\n"
             "0: [OK]\n"
             "1: [%s]\n", stk, file, line, pretty_function,mass_of_errors[1]);
         abort();
@@ -321,7 +361,7 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
     
     if (!fatal_error)
     {
-    fprintf (stk -> file_write,"Stack[%p] called from %s (string: %d) in function %s\n"
+    fprintf (stk -> file_write,"Stack[%p] called from %s (string: %lld) in function %s\n"
     //      "\t\t%s             \n"
             "{                  \n"
             "\tsize        = %d \n"
@@ -335,15 +375,14 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
 
     for (ssize_t i = 0; (i < (stk -> capacity)); i++)
     {
-        if (i == stk -> size)                               fprintf(stk -> file_write,"\t >[%d] = %d<\n", i, *((stk -> data) + i));
-        else if (*((stk -> data) + i) != POISON_ELEMENT)    fprintf(stk -> file_write,"\t #[%d] = %d\n", i, *((stk -> data) + i));
-        else                                                fprintf(stk -> file_write,"\t @[%d] = %d(POISON)\n", i, *((stk -> data) + i));
+        if (i == stk -> size)                               fprintf(stk -> file_write,"\t >[%lld] = %d<\n", i, *((stk -> data) + i));
+        else if (*((stk -> data) + i) != POISON_ELEMENT)    fprintf(stk -> file_write,"\t #[%lld] = %d\n", i, *((stk -> data) + i));
+        else                                                fprintf(stk -> file_write,"\t @[%lld] = %d(POISON)\n", i, *((stk -> data) + i));
     }
     
     fprintf (stk -> file_write,"\t} \n"
             "}   \n");
     }
-
     file_close(stk -> file_write);
     abort();
     return 1;
@@ -351,7 +390,7 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
 
 int printing_stack (Stack* stk, const char* file, const size_t line, const char* pretty_function)
 {
-    fprintf (stk -> file_write,"\nStack[%p] called from %s (string: %d) in function %s\n"
+    fprintf (stk -> file_write,"\nStack[%p] called from %s (string: %lld) in function %s\n"
             "{                  \n"
             "\tsize        = %d \n"
             "\tcapacity    = %d \n"
@@ -364,9 +403,9 @@ int printing_stack (Stack* stk, const char* file, const size_t line, const char*
 
     for (ssize_t i = 0; (i < (stk -> capacity)); i++)
     {
-        if (i == (stk -> size))                             fprintf(stk -> file_write,"\t >[%d] = %d<\n", i, *((stk -> data) + i));
-        else if (*((stk -> data) + i) != POISON_ELEMENT)    fprintf(stk -> file_write,"\t #[%d] = %d\n", i, *((stk -> data) + i));
-        else                                                fprintf(stk -> file_write,"\t @[%d] = %d(POISON)\n", i, *((stk -> data) + i));
+        if (i == (stk -> size))                             fprintf(stk -> file_write,"\t >[%lld] = %d<\n", i, *((stk -> data) + i));
+        else if (*((stk -> data) + i) != POISON_ELEMENT)    fprintf(stk -> file_write,"\t #[%lld] = %d\n", i, *((stk -> data) + i));
+        else                                                fprintf(stk -> file_write,"\t @[%lld] = %d(POISON)\n", i, *((stk -> data) + i));
     }
     
     fprintf (stk -> file_write,"\t} \n"

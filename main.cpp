@@ -10,7 +10,6 @@ int main(void)
     push (&myStack, 40);
     push (&myStack, 1);
     push (&myStack, 9);
-    myStack.r_canary_data = NULL;
     push (&myStack, -11);
     push (&myStack, 4);
     push (&myStack, -11);
@@ -31,5 +30,6 @@ ON_PRINTING(
 )
 
     StackDtor (&myStack);
+    printf("!!!!!!!!!!!!!!! <GOOD ENDING. CHECK OUTPUT.TXT> !!!!!!!!!!!\n");
     return 0;
 }
