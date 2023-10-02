@@ -5,7 +5,7 @@ int main(void)
     Stack_t myStack = {};
     
     stackCtor (&myStack);
-
+    
     int x = 0;
     push (&myStack, 40);
     push (&myStack, 1);

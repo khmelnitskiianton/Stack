@@ -1,36 +1,36 @@
 
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
+Stack[0000006049BFF850] called from stack.cpp (string: 55) in function int push(Stack_t*, Elem_t)
 {                  
 	size        = 1 
 	capacity    = 1 
 	hash_data   = -1374744106 
-	hash_struct = 1147234785 
-	data[00771598]         
+	hash_struct = 1079748956 
+	data[0000022D7F10C7D8]         
 	{                
 	 #[0] = 40
 	} 
 }   
 
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
+Stack[0000006049BFF850] called from stack.cpp (string: 55) in function int push(Stack_t*, Elem_t)
 {                  
 	size        = 2 
 	capacity    = 2 
 	hash_data   = 626917417 
-	hash_struct = 1224344770 
-	data[00771598]         
+	hash_struct = -1235031796 
+	data[0000022D7F10CA18]         
 	{                
 	 #[0] = 40
 	 #[1] = 1
 	} 
 }   
 
-Stack[0064FEC0] called from stack.cpp (string: 56) in function int push(Stack_t*, Elem_t)
+Stack[0000006049BFF850] called from stack.cpp (string: 55) in function int push(Stack_t*, Elem_t)
 {                  
 	size        = 3 
 	capacity    = 4 
-	hash_data   = -537692787 
-	hash_struct = -701666288 
-	data[00771598]         
+	hash_data   = 1310133517 
+	hash_struct = 346507487 
+	data[0000022D7F10D258]         
 	{                
 	 #[0] = 40
 	 #[1] = 1

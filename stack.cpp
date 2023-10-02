@@ -343,6 +343,8 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
     fprintf (stk -> file_write,"\t} \n"
             "}   \n");
     }
+
+    file_close(stk -> file_write);
     abort();
     return 1;
 }
@@ -350,7 +352,6 @@ int output_error (Stack_t *stk, const char* file, const size_t line, const char*
 int printing_stack (Stack* stk, const char* file, const size_t line, const char* pretty_function)
 {
     fprintf (stk -> file_write,"\nStack[%p] called from %s (string: %d) in function %s\n"
-    //      "\t\t%s             \n"
             "{                  \n"
             "\tsize        = %d \n"
             "\tcapacity    = %d \n"
@@ -426,7 +427,7 @@ ON_CANARY_ELSE(
 FILE* file_write (void)
 {
     FILE *file_write = nullptr;
-    if ((file_write = fopen (FILE_WRITE, "w")) == nullptr) 
+    if ((file_write = fopen ("output.txt", "w")) == nullptr) 
     {
         assert(0);
     }

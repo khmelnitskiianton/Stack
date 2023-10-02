@@ -20,5 +20,4 @@ Hash_t    MYHashFAQ6        (const char * str, size_t size);
 int       printing_stack    (Stack* stk, const char* file, const size_t line, const char* pretty_function);
 Canary_t* ptr_r_canary_data (Stack* stk);
 
-
 #endif
