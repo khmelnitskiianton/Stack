@@ -52,12 +52,8 @@
 #endif
 
 typedef int Elem_t;
-ON_CANARY( 
 typedef unsigned long long Canary_t; 
-)
-ON_HASH(
 typedef unsigned int Hash_t;
-)
 
 typedef struct Stack {
 ON_CANARY(
@@ -85,7 +81,8 @@ const int    N_ERRORS = 16;
 const int    MULTIPLIER = 2;
 const int    MIN_LEN = 10;
 
-#include "stack.h"
+#include "stack_base.h"
+#include "stack_support.h"
 
 #define FILE_WRITE "output.txt"
 
